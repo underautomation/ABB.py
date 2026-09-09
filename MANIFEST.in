@@ -1,0 +1,3 @@
+include README.md
+recursive-include underautomation/abb/lib *.dll *.txt
+prune tests
