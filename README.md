@@ -17,7 +17,8 @@ files and backups, and follow the state of the controller, from a normal Python 
 It works with **real controllers** and with the **virtual controllers** of RobotStudio.
 
 🔗 **More information:** [https://underautomation.com/abb](https://underautomation.com/abb)
-🔗 Also available in **[🟦 .NET](https://github.com/underautomation/ABB.NET)** & **[🟨 LabVIEW](https://github.com/underautomation/ABB.vi)**
+
+🔗 Also available in **[🟦 .NET](https://github.com/underautomation/ABB.NET)**
 
 ---
 
@@ -307,6 +308,176 @@ robot.rws.mastership.release(MastershipDomain.Motion)
 
 ---
 
+## 📂 Examples
+
+The repository ships a set of ready to run examples in the [`examples/`](https://github.com/underautomation/ABB.py/tree/main/examples) folder, one subfolder per RWS service.
+
+### How the Examples Work
+
+| File                                                                                                | Role                                                                                                                    |
+| --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [`examples/launcher.py`](https://github.com/underautomation/ABB.py/blob/main/examples/launcher.py)  | **Interactive menu** - browse and run any example from a single launcher                                                |
+| [`examples/__init__.py`](https://github.com/underautomation/ABB.py/blob/main/examples/__init__.py)  | **Shared helpers** - sets up the Python path, manages the connection settings and handles the license registration      |
+| `examples/robot_config.json`                                                                        | **Saved settings** (git-ignored) - remembers the controller address, the credentials and the license key                |
+
+**Run an example directly**
+
+> The first time you run an example, it asks for the controller address, the RWS credentials and the protocol version. The answers are saved in `robot_config.json`, so they are only typed once. Press Enter to accept the value between brackets.
+
+```bash
+python examples/system/system_info.py
+```
+
+**Or browse the examples with the launcher**
+
+```bash
+python examples/launcher.py
+```
+
+The launcher discovers the examples on its own and runs the one you pick in the same process, so a breakpoint set in an example file is hit:
+
+```
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║                             █████╗  ██████╗ ██████╗                            ║
+║                             ██╔══██╗██╔══██╗██╔══██╗                           ║
+║                             ███████║██████╔╝██████╔╝                           ║
+║                             ██╔══██║██╔══██╗██╔══██╗                           ║
+║                             ██║  ██║██████╔╝██████╔╝                           ║
+║                             ╚═╝  ╚═╝╚═════╝ ╚═════╝                            ║
+║                                                                                ║
+║                    Python SDK - Interactive Example Launcher                   ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                SELECT A CATEGORY                               ║
+╠════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                ║
+║  🤖   1. CONTROLLER   (3 examples)                                             ║
+║         Controller - identity, clock, options, backups                         ║
+║                                                                                ║
+║  📜   2. ELOG         (1 example)                                              ║
+║         Event log - read and filter controller messages                        ║
+║                                                                                ║
+║  📂   3. FILE         (2 examples)                                             ║
+║         File system - browse, download and upload files                        ║
+║                                                                                ║
+║  ⚡   4. IO           (4 examples)                                             ║
+║         I/O system - networks, devices, read and write signals                 ║
+║                                                                                ║
+║  🔑   5. LICENSE      (1 example)                                              ║
+║         License management - activation & status                               ║
+║                                                                                ║
+║  🔒   6. MASTERSHIP   (1 example)                                              ║
+║         Mastership - request and release the write access                      ║
+║                                                                                ║
+║  🦾   7. MOTION       (3 examples)                                             ║
+║         Motion system - mechanical units, positions, kinematics                ║
+║                                                                                ║
+║  🚦   8. PANEL        (2 examples)                                             ║
+║         Control panel - controller state, operation mode, speed ratio          ║
+║                                                                                ║
+║  🧾   9. RAPID        (5 examples)                                             ║
+║         RAPID - tasks, modules, symbols, program execution                     ║
+║                                                                                ║
+║  🧩  10. SYSTEM       (1 example)                                              ║
+║         System - RobotWare version, options, products, energy                  ║
+║                                                                                ║
+╠════════════════════════════════════════════════════════════════════════════════╣
+║  0. Exit                                                                       ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+  Enter category number [0-10]:
+```
+
+---
+
+### 📋 Complete Example List
+
+#### 🔑 License
+
+| #   | Example                                                                                                       | Description                                                        |
+| --- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| 1   | [license_info.py](https://github.com/underautomation/ABB.py/blob/main/examples/license/license_info.py)       | Show the license state and every license property, no connection needed |
+
+#### 🤖 Controller
+
+| #   | Example                                                                                                                   | Description                                                                       |
+| --- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 2   | [controller_identity.py](https://github.com/underautomation/ABB.py/blob/main/examples/controller/controller_identity.py)  | Name, serial id, type, MAC address, installed systems, options and network interfaces |
+| 3   | [controller_clock.py](https://github.com/underautomation/ABB.py/blob/main/examples/controller/controller_clock.py)        | Read the controller clock, its time zone and its time server, and set the clock     |
+| 4   | [controller_backup.py](https://github.com/underautomation/ABB.py/blob/main/examples/controller/controller_backup.py)      | Read the backup state and the content of a backup, and create a new one under `$temp` |
+
+#### 🧩 System
+
+| #   | Example                                                                                                 | Description                                                                     |
+| --- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 5   | [system_info.py](https://github.com/underautomation/ABB.py/blob/main/examples/system/system_info.py)    | RobotWare version, options, robot types, installed products and energy counters |
+
+#### 🚦 Panel
+
+| #   | Example                                                                                                             | Description                                                              |
+| --- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 6   | [panel_state.py](https://github.com/underautomation/ABB.py/blob/main/examples/panel/panel_state.py)                 | Controller state, operation mode, mode selector lock and collision detection |
+| 7   | [panel_speed_ratio.py](https://github.com/underautomation/ABB.py/blob/main/examples/panel/panel_speed_ratio.py)     | Read and write the speed ratio, switch the motors on and off             |
+
+#### ⚡ I/O
+
+| #   | Example                                                                                                                 | Description                                                                  |
+| --- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| 8   | [io_list_signals.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_list_signals.py)                | List every signal with its value and its state, and search signals by name   |
+| 9   | [io_read_signal.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_read_signal.py)                  | Read one signal in detail: values, states, quality, timestamps, configuration |
+| 10  | [io_write_signal.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_write_signal.py)                | Write, invert, pulse and simulate an output signal, then restore it          |
+| 11  | [io_networks_devices.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_networks_devices.py)        | Browse the I/O topology: fieldbus networks, devices and their signals        |
+
+#### 🧾 RAPID
+
+| #   | Example                                                                                                                   | Description                                                                    |
+| --- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 12  | [rapid_tasks.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_tasks.py)                       | List the tasks, read one in detail, its program, its pointers and the execution state |
+| 13  | [rapid_read_symbol.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_read_symbol.py)           | Search the RAPID symbols of a task and read the value and properties of one    |
+| 14  | [rapid_write_symbol.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_write_symbol.py)         | Take the edit mastership, write a variable, restore it and release the mastership |
+| 15  | [rapid_modules.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_modules.py)                   | List the modules of a task, print the source code and search a text in it      |
+| 16  | [rapid_start_stop.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_start_stop.py)             | Reset the program pointer, start the execution, follow its state and stop it   |
+
+#### 🦾 Motion
+
+| #   | Example                                                                                                                            | Description                                                                        |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 17  | [motion_mechanical_units.py](https://github.com/underautomation/ABB.py/blob/main/examples/motion/motion_mechanical_units.py)       | List the mechanical units, their axes, their base frame and their calibration       |
+| 18  | [motion_current_position.py](https://github.com/underautomation/ABB.py/blob/main/examples/motion/motion_current_position.py)       | Read the current `robtarget` in each coordinate system, the `jointtarget` and the axes |
+| 19  | [motion_kinematics.py](https://github.com/underautomation/ABB.py/blob/main/examples/motion/motion_kinematics.py)                   | Forward and inverse kinematics on the controller, and every joint solution of a pose |
+
+#### 📂 File
+
+| #   | Example                                                                                                     | Description                                                                |
+| --- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 20  | [file_browse.py](https://github.com/underautomation/ABB.py/blob/main/examples/file/file_browse.py)          | Walk the controller file system, enter directories and read a file content  |
+| 21  | [file_transfer.py](https://github.com/underautomation/ABB.py/blob/main/examples/file/file_transfer.py)      | Upload a local file under `$temp`, download it back and delete it           |
+
+#### 📜 Event Log
+
+| #   | Example                                                                                                           | Description                                                              |
+| --- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 22  | [elog_messages.py](https://github.com/underautomation/ABB.py/blob/main/examples/elog/elog_messages.py)            | List the event log domains and read their messages with causes and actions |
+
+#### 🔒 Mastership
+
+| #   | Example                                                                                                                     | Description                                                          |
+| --- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| 23  | [mastership_info.py](https://github.com/underautomation/ABB.py/blob/main/examples/mastership/mastership_info.py)            | List the mastership domains, see who holds them, take one and release it |
+
+### Notes on the examples
+
+- An example that only reads is safe on any controller. The ones that write ask before each change and put the original value back.
+- A virtual controller does not implement every resource of a real one. When it answers 404, the example prints the reason and carries on.
+- A controller refuses a write when the mode selector is on manual and the FlexPendant keeps the ownership. The example prints the 403 answer instead of stopping.
+- On an OmniCore controller the certificate is signed by the controller itself. `examples/__init__.py` relaxes the .NET runtime for it before connecting, see `allow_self_signed_certificates()`.
+
+---
+
 ## 🔁 IRC5 and OmniCore, one API
 
 ABB controllers expose Robot Web Services in two versions. This SDK covers both. The same code runs on
@@ -323,12 +494,12 @@ HTTP or HTTPS is a separate setting (`use_https`), independent of the controller
 
 ## 🔍 Compatibility
 
-|                       | Supported                                       |
-| --------------------- | ---------------------------------------------- |
-| **Robot Controllers** | IRC5, OmniCore, and their virtual controllers  |
-| **OS**                | Windows, Linux, macOS                          |
-| **Python**            | 3.7+                                           |
-| **Dependency**        | `pythonnet 3.0.5` (installed automatically)    |
+|                       | Supported                                     |
+| --------------------- | --------------------------------------------- |
+| **Robot Controllers** | IRC5, OmniCore, and their virtual controllers |
+| **OS**                | Windows, Linux, macOS                         |
+| **Python**            | 3.7+                                          |
+| **Dependency**        | `pythonnet 3.0.5` (installed automatically)   |
 
 The controller needs no ABB option. Robot Web Services is part of a standard system.
 
