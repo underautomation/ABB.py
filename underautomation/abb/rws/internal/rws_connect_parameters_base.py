@@ -13,15 +13,6 @@ class RwsConnectParametersBase:
 			self._instance = _internal
 
 	@property
-	def ip(self) -> str:
-		'''IP address or hostname of the robot controller'''
-		return self._instance.Ip
-
-	@ip.setter
-	def ip(self, value: str):
-		self._instance.Ip = value
-
-	@property
 	def port(self) -> int:
 		'''RWS service port (if set to 0, the SDK will use 80 for HTTP, 443 for HTTPS)'''
 		return self._instance.Port

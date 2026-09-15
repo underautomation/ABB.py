@@ -2,6 +2,7 @@ from __future__ import annotations
 import typing
 from underautomation.abb.connection_parameters import ConnectionParameters
 from underautomation.abb.rws.internal.rws_client_internal import RwsClientInternal
+from underautomation.abb.discovery.discovered_controller import DiscoveredController
 from underautomation.abb.license.license_info import LicenseInfo
 from UnderAutomation.ABB import AbbController as abb_controller
 
@@ -25,6 +26,15 @@ class AbbController:
 	def disconnect(self) -> None:
 		'''Disconnect from the robot controller'''
 		self._instance.Disconnect()
+
+	@staticmethod
+	def discover(timeoutMilliseconds: int=2000) -> typing.List[DiscoveredController]:
+		'''Search the local network for ABB robot controllers, during the given time. Two ways of finding a controller run together: the announcements the controllers of the network send, and a test of the ports this machine serves, which is what finds the virtual controllers of RobotStudio whatever port they were given. No license is needed.
+
+		:param timeoutMilliseconds: How long the search lasts, in milliseconds. Below 1000 ms a slow controller may be missed. Default is 2000 ms.
+		:returns: The controllers that answered, or an empty array when none did
+		'''
+		return [DiscoveredController(x) for x in abb_controller.Discover(timeoutMilliseconds)]
 
 	@staticmethod
 	def register_license(licensee: str, key: str) -> LicenseInfo:
