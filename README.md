@@ -39,6 +39,7 @@ It works with **real controllers** and with the **virtual controllers** of Robot
 - 📜 **Event log** - read the event log by domain, in the language you ask, and clear it
 - 🔋 **System and energy** - system product list, options and energy counters
 - 🔑 **Mastership** - request and release the edit and motion mastership
+- 🔍 **Discovery** - find the ABB controllers of the local network and the virtual controllers of this machine, no license or known address needed
 - 🔁 **One API for both controller generations** - IRC5 (RWS 1.0) and OmniCore (RWS 2.0), only one connection parameter changes
 
 ---
@@ -242,6 +243,21 @@ print(f"J1={joint_target.robot_axes.axis1} J2={joint_target.robot_axes.axis2}")
 # Jog the robot
 robot.rws.motion_system.set_jogging_mechanical_unit("ROB_1")
 robot.rws.motion_system.jog(RobotJoints(5, 0, 0, 0, 0, 0), 0)
+```
+
+### 🔍 Discover controllers
+
+```python
+# Finds the controllers of the local network and the virtual controllers of this machine.
+# No connection is opened and no license is needed.
+found = AbbController.discover()
+
+for controller in found:
+    print(f"{controller.system_name} at {controller.address}:{controller.port}")
+
+# to_connection_parameters carries the address, the port, the scheme and the RWS version found
+robot = AbbController()
+robot.connect(found[0].to_connection_parameters())
 ```
 
 ### 🎛️ Controller and state
