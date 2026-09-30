@@ -1,128 +1,105 @@
 # ABB Robot Communication SDK for Python
 
 [![PyPI](https://img.shields.io/pypi/v/UnderAutomation.ABB?label=PyPI&logo=pypi)](https://pypi.org/project/UnderAutomation.ABB/)
-[![Python](https://img.shields.io/badge/Python-3.7_|_3.8_|_3.9_|_3.10_|_3.11_|_3.12_|_3.13-blue?logo=python)](#-compatibility)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blue)](#-compatibility)
-[![License](https://img.shields.io/badge/License-Commercial-red)](https://underautomation.com/abb/eula)
+[![PyPI downloads](https://img.shields.io/pypi/dm/UnderAutomation.ABB?label=Downloads&logo=pypi)](https://pypi.org/project/UnderAutomation.ABB/)
+[![Python](https://img.shields.io/badge/Python-3.7_to_3.13-blue)](#compatibility)
+[![Platforms](https://img.shields.io/badge/OS-Windows_Linux_macOS-informational)](#compatibility)
+[![License](https://img.shields.io/badge/license-commercial-blue)](https://underautomation.com/abb/eula)
 
-### 🤖 Talk to ABB robots from Python
-
-**UnderAutomation.ABB** is a fully managed SDK that talks to ABB industrial robot controllers over
+**UnderAutomation.ABB** is a Python package that talks to ABB industrial robot controllers over
 **Robot Web Services (RWS)**. The same code runs on **IRC5** (RobotWare 6) and on **OmniCore**
 (RobotWare 7). Nothing is installed on the controller. No RobotStudio, no PC SDK, no ABB runtime.
 
 Use it to read and write RAPID variables, control I/O, read positions, jog the robot, manage programs,
-files and backups, and follow the state of the controller, from a normal Python application.
+files and backups, and follow the state of the controller, from a Python script. It works with real
+controllers and with the virtual controllers of RobotStudio.
 
-It works with **real controllers** and with the **virtual controllers** of RobotStudio.
+- Product page: [underautomation.com/abb](https://underautomation.com/abb)
+- Documentation: [underautomation.com/abb/documentation/get-started-python](https://underautomation.com/abb/documentation/get-started-python)
+- Also available for .NET: [ABB.NET](https://github.com/underautomation/ABB.NET)
 
-🔗 **More information:** [https://underautomation.com/abb](https://underautomation.com/abb)
+## What you can do
 
-🔗 Also available in **[🟦 .NET](https://github.com/underautomation/ABB.NET)**
+- **RAPID variables and programs:** read and write variables, persistents and constants, start and stop
+  tasks, move the program pointer, load and save modules.
+- **Inputs / Outputs:** list, read and write digital, analog and group signals, pulse, invert or simulate
+  a signal, browse I/O devices and networks.
+- **Position and kinematics:** read the current `robtarget` and `jointtarget`, convert between Cartesian
+  pose and joint values, jog the robot.
+- **Controller and state:** identity, options, operation mode, controller state, speed ratio, clock,
+  language and network.
+- **Backup and restore:** create a full backup, check it, restore it.
+- **File system:** browse the controller file system, download and upload files, create, copy, rename and
+  delete files and directories.
+- **Event log:** read the event log by domain, in the language you ask, and clear it.
+- **System and energy:** system product list, options and energy counters.
+- **Mastership:** request and release the edit and motion mastership.
+- **Discovery:** find the ABB controllers of the local network and the virtual controllers of this
+  machine, without a license and without a known address.
+- **One API for both controller generations:** IRC5 (RWS 1.0) and OmniCore (RWS 2.0), only one connection
+  parameter changes.
 
----
+No ABB option is required on the controller. Robot Web Services is part of a standard system.
 
-[⭐ Star this repo if it is useful to you](https://github.com/underautomation/ABB.py/stargazers)
-[👁️ Watch it to follow new releases](https://github.com/underautomation/ABB.py/watchers)
+## How it works
 
----
+The package wraps the .NET library `UnderAutomation.Abb.dll` with [pythonnet](https://github.com/pythonnet/pythonnet).
+The DLL is inside the package: `pip install` installs everything, including pythonnet.
 
-## 🚀 TL;DR
+- **Windows:** the DLL runs on the .NET Framework 4.x of Windows. Nothing else to install.
+- **Linux and macOS:** install the .NET runtime (for example .NET 8), then tell pythonnet to use it before
+  you start Python:
 
-- ✔️ **No RobotStudio, no PC SDK** - RWS is part of a standard controller system
-- 🧾 **RAPID variables and programs** - read and write variables, persistents and constants, start and stop tasks, move the program pointer, load and save modules
-- ⚡ **Inputs / Outputs** - list, read and write digital, analog and group signals, pulse, invert or simulate a signal, browse I/O devices and networks
-- 📐 **Position and kinematics** - read the current `robtarget` and `jointtarget`, convert between Cartesian pose and joint values, jog the robot
-- 🎛️ **Controller and state** - identity, options, operation mode, controller state, speed ratio, clock, language and network
-- 💾 **Backup and restore** - create a full backup, check it, restore it
-- 📂 **File system** - browse the controller file system, download and upload files, create, copy, rename and delete files and directories
-- 📜 **Event log** - read the event log by domain, in the language you ask, and clear it
-- 🔋 **System and energy** - system product list, options and energy counters
-- 🔑 **Mastership** - request and release the edit and motion mastership
-- 🔍 **Discovery** - find the ABB controllers of the local network and the virtual controllers of this machine, no license or known address needed
-- 🔁 **One API for both controller generations** - IRC5 (RWS 1.0) and OmniCore (RWS 2.0), only one connection parameter changes
+  ```bash
+  export PYTHONNET_RUNTIME=coreclr
+  ```
 
----
+  Without this variable, pythonnet uses Mono, its default runtime on Linux and macOS. You can also choose
+  the runtime in your code, before the first import of the package:
 
-## 🛠 Installation & Getting Started
+  ```python
+  from pythonnet import load
+  load("coreclr")
+  ```
 
-### Prerequisites
+## Installation
 
-- **Python 3.7** or higher
-- An ABB robot controller, or a virtual controller in RobotStudio
-
-### Step 1 - Create a virtual environment
-
-We recommend a virtual environment to keep your project dependencies isolated.
-
-```bash
-# Create a project folder
-mkdir my-abb-project
-cd my-abb-project
-
-# Create a virtual environment
-python -m venv venv
-
-# Activate it
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-You should see `(venv)` in your terminal prompt.
-
-### Step 2 - Install the SDK
-
-The SDK is published on PyPI:
+Python 3.7 to 3.13 is supported (the limit of pythonnet 3.0.5). Install the package in a virtual
+environment:
 
 ```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux and macOS
+source .venv/bin/activate
+
 pip install UnderAutomation.ABB
 ```
 
-All dependencies (including `pythonnet`) are installed automatically.
-
-On **Linux**, also install the .NET runtime and set `PYTHONNET_RUNTIME` to `coreclr`:
+Or install it from the sources of this repository:
 
 ```bash
-sudo apt-get install -y dotnet-runtime-8.0
-export PYTHONNET_RUNTIME=coreclr
+git clone https://github.com/underautomation/ABB.py.git
+cd ABB.py
+pip install -e .
 ```
 
-> **Alternative: install from source**
->
-> ```bash
-> git clone https://github.com/underautomation/ABB.py.git
-> cd ABB.py
-> pip install -e .
-> ```
-
-### Step 3 - Connect to your controller
-
-Create a Python file (for example `main.py`):
+## Getting started
 
 ```python
 from underautomation.abb.abb_controller import AbbController
 
 # The SDK runs in trial mode for 30 days. Register your key to remove the trial limit.
-# If you get a license exception, ask a trial key at https://underautomation.com/license
 # AbbController.register_license("Your Company", "your-license-key")
 
 robot = AbbController()
-
-# Connect (replace with your controller IP address)
 robot.connect("192.168.125.1")
 
 identity = robot.rws.controller.get_identity()
 print(identity.name)
 
 robot.disconnect()
-```
-
-Run it:
-
-```bash
-python main.py
 ```
 
 ### Choose the controller generation
@@ -138,54 +115,51 @@ from underautomation.abb.rws.rws_version import RwsVersion
 params = ConnectionParameters("192.168.125.1")
 params.rws.username = "Default User"
 params.rws.password = "robotics"
-params.rws.use_https = True                        # OmniCore is reached over HTTPS
-params.rws.version = RwsVersion.OmniCore_V2_0      # or RwsVersion.Irc5_V1_0 for IRC5
+params.rws.use_https = True                    # OmniCore is reached over HTTPS
+params.rws.version = RwsVersion.OmniCore_V2_0  # or RwsVersion.Irc5_V1_0 for IRC5
 
 robot = AbbController()
 robot.connect(params)
 ```
 
-> **Without the licensed controller class**
->
-> `RwsClient` is a standalone RWS client you can use without the `AbbController` licensing layer:
->
-> ```python
-> from underautomation.abb.rws.rws_client import RwsClient
-> from underautomation.abb.rws.rws_version import RwsVersion
->
-> client = RwsClient()
-> client.connect("192.168.125.1", useHttps=True, version=RwsVersion.OmniCore_V2_0)
-> print(client.controller.get_identity().name)
-> ```
+### Without the license layer
 
----
-
-## 🔑 Licensing
-
-The SDK works out of the box for **30 days** (trial period), no registration needed.
-
-After the trial, you can:
-
-- **Buy a license** at [underautomation.com/order](https://underautomation.com/order?sdk=abb)
-- **Get a new trial period immediately by email** at [underautomation.com/license](https://underautomation.com/license?sdk=abb)
-
-To register a license in code:
+`RwsClient` is a standalone RWS client that you can use without `AbbController`:
 
 ```python
-from underautomation.abb.abb_controller import AbbController
+from underautomation.abb.rws.rws_client import RwsClient
+from underautomation.abb.rws.rws_version import RwsVersion
 
-license_info = AbbController.register_license("your-licensee", "your-license-key")
-print(license_info)
+client = RwsClient()
+client.connect("192.168.125.1", useHttps=True, version=RwsVersion.OmniCore_V2_0)
+print(client.controller.get_identity().name)
 ```
 
----
+## From .NET names to Python names
 
-## 📌 Features
+The Python API is the .NET API with Python names. The [.NET documentation](https://underautomation.com/abb/documentation)
+applies to Python.
+
+| .NET | Python |
+| --- | --- |
+| Method `GetIdentity()` | `get_identity()` |
+| Property `Rws.Controller` | `rws.controller` |
+| Static method `AbbController.RegisterLicense(...)` | `AbbController.register_license(...)` |
+| Enum value `RwsVersion.OmniCore_V2_0` | `RwsVersion.OmniCore_V2_0` |
+| Array `IoSignalItem[]` | list-like object, use `list(...)` to copy it |
+| `Nullable<int>` | `int \| None` |
+
+Each type is in the module named after it, in snake case:
+`UnderAutomation.ABB.Rws.Data.MastershipDomain` is `underautomation.abb.rws.data.mastership_domain.MastershipDomain`.
+
+The async methods of the .NET API (`...Async`) have no Python equivalent: use the synchronous methods.
+
+## Features
 
 Everything is reached through `robot.rws`, grouped by service:
 `controller`, `io`, `rapid`, `motion_system`, `panel`, `system`, `file`, `elog`, `mastership`.
 
-### 🧾 RAPID variables and programs
+### RAPID variables and programs
 
 ```python
 from underautomation.abb.rws.data.mastership_domain import MastershipDomain
@@ -209,7 +183,7 @@ tasks = robot.rws.rapid.get_tasks()
 state = robot.rws.rapid.get_execution_state()
 ```
 
-### ⚡ Inputs / Outputs
+### Inputs / Outputs
 
 ```python
 # List every signal
@@ -228,7 +202,7 @@ robot.rws.io.invert_signal("EtherNetIP", "d652", "DO_01", 1)
 robot.rws.io.set_signal_state("EtherNetIP", "d652", "DI_01", simulated=True)
 ```
 
-### 📐 Position and kinematics
+### Position and kinematics
 
 ```python
 from underautomation.abb.common.robot_joints import RobotJoints
@@ -245,7 +219,7 @@ robot.rws.motion_system.set_jogging_mechanical_unit("ROB_1")
 robot.rws.motion_system.jog(RobotJoints(5, 0, 0, 0, 0, 0), 0)
 ```
 
-### 🔍 Discover controllers
+### Discover controllers
 
 ```python
 # Finds the controllers of the local network and the virtual controllers of this machine.
@@ -260,7 +234,7 @@ robot = AbbController()
 robot.connect(found[0].to_connection_parameters())
 ```
 
-### 🎛️ Controller and state
+### Controller and state
 
 ```python
 from datetime import datetime
@@ -278,7 +252,7 @@ robot.rws.controller.set_clock(datetime.now())
 has_option = robot.rws.controller.has_option("RobotWare-OS")
 ```
 
-### 💾 Backup and restore
+### Backup and restore
 
 ```python
 robot.rws.controller.create_backup("HOME:/backups/2026-01-15")
@@ -288,7 +262,7 @@ if check.is_accepted:
     robot.rws.controller.restore_backup("HOME:/backups/2026-01-15")
 ```
 
-### 📂 File system
+### File system
 
 ```python
 listing = robot.rws.file.list_directory("HOME:/")
@@ -302,7 +276,7 @@ robot.rws.file.get_file_to_destination("HOME:/myprogram.mod", r"C:\backup\myprog
 robot.rws.file.delete_file("HOME:/old.mod")
 ```
 
-### 📜 Event log
+### Event log
 
 ```python
 messages = robot.rws.elog.get_messages(domain=0, language="en")
@@ -312,7 +286,7 @@ for m in messages:
 robot.rws.elog.clear_all_messages()
 ```
 
-### 🔑 Mastership
+### Mastership
 
 ```python
 from underautomation.abb.rws.data.mastership_domain import MastershipDomain
@@ -322,229 +296,100 @@ robot.rws.mastership.request(MastershipDomain.Motion)
 robot.rws.mastership.release(MastershipDomain.Motion)
 ```
 
----
+## Examples
 
-## 📂 Examples
+The folder [`examples`](examples) contains scripts ready to run, one folder per RWS service.
+`examples/__init__.py` holds the shared helpers: Python path, connection settings and license
+registration. The first run asks the address of the controller, the RWS credentials and the protocol
+version, and saves them in `examples/robot_config.json` (ignored by git). Press Enter to accept the value
+between brackets.
 
-The repository ships a set of ready to run examples in the [`examples/`](https://github.com/underautomation/ABB.py/tree/main/examples) folder, one subfolder per RWS service.
-
-### How the Examples Work
-
-| File                                                                                                | Role                                                                                                                    |
-| --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| [`examples/launcher.py`](https://github.com/underautomation/ABB.py/blob/main/examples/launcher.py)  | **Interactive menu** - browse and run any example from a single launcher                                                |
-| [`examples/__init__.py`](https://github.com/underautomation/ABB.py/blob/main/examples/__init__.py)  | **Shared helpers** - sets up the Python path, manages the connection settings and handles the license registration      |
-| `examples/robot_config.json`                                                                        | **Saved settings** (git-ignored) - remembers the controller address, the credentials and the license key                |
-
-**Run an example directly**
-
-> The first time you run an example, it asks for the controller address, the RWS credentials and the protocol version. The answers are saved in `robot_config.json`, so they are only typed once. Press Enter to accept the value between brackets.
+Run a script from the root of the repository:
 
 ```bash
 python examples/system/system_info.py
 ```
 
-**Or browse the examples with the launcher**
+Or choose a script in a menu. The launcher runs it in the same process, so a breakpoint set in an example
+file is hit:
 
 ```bash
 python examples/launcher.py
 ```
 
-The launcher discovers the examples on its own and runs the one you pick in the same process, so a breakpoint set in an example file is hit:
+| Script | What it does |
+| --- | --- |
+| [`license/license_info.py`](examples/license/license_info.py) | License state and every license property, no connection needed. |
+| [`controller/controller_identity.py`](examples/controller/controller_identity.py) | Name, serial id, type, MAC address, installed systems, options and network interfaces. |
+| [`controller/controller_clock.py`](examples/controller/controller_clock.py) | Reads the controller clock, its time zone and its time server, and sets the clock. |
+| [`controller/controller_backup.py`](examples/controller/controller_backup.py) | Reads the backup state and the content of a backup, and creates a new one under `$temp`. |
+| [`system/system_info.py`](examples/system/system_info.py) | RobotWare version, options, robot types, installed products and energy counters. |
+| [`panel/panel_state.py`](examples/panel/panel_state.py) | Controller state, operation mode, mode selector lock and collision detection. |
+| [`panel/panel_speed_ratio.py`](examples/panel/panel_speed_ratio.py) | Reads and writes the speed ratio, switches the motors on and off. |
+| [`io/io_list_signals.py`](examples/io/io_list_signals.py) | Lists every signal with its value and its state, and searches signals by name. |
+| [`io/io_read_signal.py`](examples/io/io_read_signal.py) | Reads one signal in detail: values, states, quality, timestamps, configuration. |
+| [`io/io_write_signal.py`](examples/io/io_write_signal.py) | Writes, inverts, pulses and simulates an output signal, then restores it. |
+| [`io/io_networks_devices.py`](examples/io/io_networks_devices.py) | Browses the I/O topology: fieldbus networks, devices and their signals. |
+| [`rapid/rapid_tasks.py`](examples/rapid/rapid_tasks.py) | Lists the tasks, reads one in detail, its program, its pointers and the execution state. |
+| [`rapid/rapid_read_symbol.py`](examples/rapid/rapid_read_symbol.py) | Searches the RAPID symbols of a task and reads the value and properties of one. |
+| [`rapid/rapid_write_symbol.py`](examples/rapid/rapid_write_symbol.py) | Takes the edit mastership, writes a variable, restores it and releases the mastership. |
+| [`rapid/rapid_modules.py`](examples/rapid/rapid_modules.py) | Lists the modules of a task, prints the source code and searches a text in it. |
+| [`rapid/rapid_start_stop.py`](examples/rapid/rapid_start_stop.py) | Resets the program pointer, starts the execution, follows its state and stops it. |
+| [`motion/motion_mechanical_units.py`](examples/motion/motion_mechanical_units.py) | Lists the mechanical units, their axes, their base frame and their calibration. |
+| [`motion/motion_current_position.py`](examples/motion/motion_current_position.py) | Reads the current `robtarget` in each coordinate system, the `jointtarget` and the axes. |
+| [`motion/motion_kinematics.py`](examples/motion/motion_kinematics.py) | Forward and inverse kinematics on the controller, and every joint solution of a pose. |
+| [`file/file_browse.py`](examples/file/file_browse.py) | Walks the controller file system, enters directories and reads the content of a file. |
+| [`file/file_transfer.py`](examples/file/file_transfer.py) | Uploads a local file under `$temp`, downloads it back and deletes it. |
+| [`elog/elog_messages.py`](examples/elog/elog_messages.py) | Lists the event log domains and reads their messages with causes and actions. |
+| [`mastership/mastership_info.py`](examples/mastership/mastership_info.py) | Lists the mastership domains, shows who holds them, takes one and releases it. |
 
-```
-╔════════════════════════════════════════════════════════════════════════════════╗
-║                                                                                ║
-║                             █████╗  ██████╗ ██████╗                            ║
-║                             ██╔══██╗██╔══██╗██╔══██╗                           ║
-║                             ███████║██████╔╝██████╔╝                           ║
-║                             ██╔══██║██╔══██╗██╔══██╗                           ║
-║                             ██║  ██║██████╔╝██████╔╝                           ║
-║                             ╚═╝  ╚═╝╚═════╝ ╚═════╝                            ║
-║                                                                                ║
-║                    Python SDK - Interactive Example Launcher                   ║
-║                                                                                ║
-╚════════════════════════════════════════════════════════════════════════════════╝
+Notes:
 
-╔════════════════════════════════════════════════════════════════════════════════╗
-║                                SELECT A CATEGORY                               ║
-╠════════════════════════════════════════════════════════════════════════════════╣
-║                                                                                ║
-║  🤖   1. CONTROLLER   (3 examples)                                             ║
-║         Controller - identity, clock, options, backups                         ║
-║                                                                                ║
-║  📜   2. ELOG         (1 example)                                              ║
-║         Event log - read and filter controller messages                        ║
-║                                                                                ║
-║  📂   3. FILE         (2 examples)                                             ║
-║         File system - browse, download and upload files                        ║
-║                                                                                ║
-║  ⚡   4. IO           (4 examples)                                             ║
-║         I/O system - networks, devices, read and write signals                 ║
-║                                                                                ║
-║  🔑   5. LICENSE      (1 example)                                              ║
-║         License management - activation & status                               ║
-║                                                                                ║
-║  🔒   6. MASTERSHIP   (1 example)                                              ║
-║         Mastership - request and release the write access                      ║
-║                                                                                ║
-║  🦾   7. MOTION       (3 examples)                                             ║
-║         Motion system - mechanical units, positions, kinematics                ║
-║                                                                                ║
-║  🚦   8. PANEL        (2 examples)                                             ║
-║         Control panel - controller state, operation mode, speed ratio          ║
-║                                                                                ║
-║  🧾   9. RAPID        (5 examples)                                             ║
-║         RAPID - tasks, modules, symbols, program execution                     ║
-║                                                                                ║
-║  🧩  10. SYSTEM       (1 example)                                              ║
-║         System - RobotWare version, options, products, energy                  ║
-║                                                                                ║
-╠════════════════════════════════════════════════════════════════════════════════╣
-║  0. Exit                                                                       ║
-║                                                                                ║
-╚════════════════════════════════════════════════════════════════════════════════╝
+- An example that only reads is safe on any controller. The examples that write ask before each change
+  and put the original value back.
+- A virtual controller does not implement every resource of a real one. When it answers 404, the example
+  prints the reason and continues.
+- A controller refuses a write when the mode selector is on manual and the FlexPendant keeps the
+  ownership. The example prints the 403 answer instead of stopping.
+- The certificate of an OmniCore controller is signed by the controller itself. `examples/__init__.py`
+  accepts it before the connection, see `allow_self_signed_certificates()`.
 
-  Enter category number [0-10]:
-```
+## IRC5 and OmniCore, one API
 
----
+ABB controllers expose Robot Web Services in two versions. This SDK covers both. The same code runs on an
+IRC5 and on an OmniCore. Only the connection parameters change.
 
-### 📋 Complete Example List
-
-#### 🔑 License
-
-| #   | Example                                                                                                       | Description                                                        |
-| --- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| 1   | [license_info.py](https://github.com/underautomation/ABB.py/blob/main/examples/license/license_info.py)       | Show the license state and every license property, no connection needed |
-
-#### 🤖 Controller
-
-| #   | Example                                                                                                                   | Description                                                                       |
-| --- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| 2   | [controller_identity.py](https://github.com/underautomation/ABB.py/blob/main/examples/controller/controller_identity.py)  | Name, serial id, type, MAC address, installed systems, options and network interfaces |
-| 3   | [controller_clock.py](https://github.com/underautomation/ABB.py/blob/main/examples/controller/controller_clock.py)        | Read the controller clock, its time zone and its time server, and set the clock     |
-| 4   | [controller_backup.py](https://github.com/underautomation/ABB.py/blob/main/examples/controller/controller_backup.py)      | Read the backup state and the content of a backup, and create a new one under `$temp` |
-
-#### 🧩 System
-
-| #   | Example                                                                                                 | Description                                                                     |
-| --- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| 5   | [system_info.py](https://github.com/underautomation/ABB.py/blob/main/examples/system/system_info.py)    | RobotWare version, options, robot types, installed products and energy counters |
-
-#### 🚦 Panel
-
-| #   | Example                                                                                                             | Description                                                              |
-| --- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 6   | [panel_state.py](https://github.com/underautomation/ABB.py/blob/main/examples/panel/panel_state.py)                 | Controller state, operation mode, mode selector lock and collision detection |
-| 7   | [panel_speed_ratio.py](https://github.com/underautomation/ABB.py/blob/main/examples/panel/panel_speed_ratio.py)     | Read and write the speed ratio, switch the motors on and off             |
-
-#### ⚡ I/O
-
-| #   | Example                                                                                                                 | Description                                                                  |
-| --- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| 8   | [io_list_signals.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_list_signals.py)                | List every signal with its value and its state, and search signals by name   |
-| 9   | [io_read_signal.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_read_signal.py)                  | Read one signal in detail: values, states, quality, timestamps, configuration |
-| 10  | [io_write_signal.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_write_signal.py)                | Write, invert, pulse and simulate an output signal, then restore it          |
-| 11  | [io_networks_devices.py](https://github.com/underautomation/ABB.py/blob/main/examples/io/io_networks_devices.py)        | Browse the I/O topology: fieldbus networks, devices and their signals        |
-
-#### 🧾 RAPID
-
-| #   | Example                                                                                                                   | Description                                                                    |
-| --- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| 12  | [rapid_tasks.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_tasks.py)                       | List the tasks, read one in detail, its program, its pointers and the execution state |
-| 13  | [rapid_read_symbol.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_read_symbol.py)           | Search the RAPID symbols of a task and read the value and properties of one    |
-| 14  | [rapid_write_symbol.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_write_symbol.py)         | Take the edit mastership, write a variable, restore it and release the mastership |
-| 15  | [rapid_modules.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_modules.py)                   | List the modules of a task, print the source code and search a text in it      |
-| 16  | [rapid_start_stop.py](https://github.com/underautomation/ABB.py/blob/main/examples/rapid/rapid_start_stop.py)             | Reset the program pointer, start the execution, follow its state and stop it   |
-
-#### 🦾 Motion
-
-| #   | Example                                                                                                                            | Description                                                                        |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| 17  | [motion_mechanical_units.py](https://github.com/underautomation/ABB.py/blob/main/examples/motion/motion_mechanical_units.py)       | List the mechanical units, their axes, their base frame and their calibration       |
-| 18  | [motion_current_position.py](https://github.com/underautomation/ABB.py/blob/main/examples/motion/motion_current_position.py)       | Read the current `robtarget` in each coordinate system, the `jointtarget` and the axes |
-| 19  | [motion_kinematics.py](https://github.com/underautomation/ABB.py/blob/main/examples/motion/motion_kinematics.py)                   | Forward and inverse kinematics on the controller, and every joint solution of a pose |
-
-#### 📂 File
-
-| #   | Example                                                                                                     | Description                                                                |
-| --- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| 20  | [file_browse.py](https://github.com/underautomation/ABB.py/blob/main/examples/file/file_browse.py)          | Walk the controller file system, enter directories and read a file content  |
-| 21  | [file_transfer.py](https://github.com/underautomation/ABB.py/blob/main/examples/file/file_transfer.py)      | Upload a local file under `$temp`, download it back and delete it           |
-
-#### 📜 Event Log
-
-| #   | Example                                                                                                           | Description                                                              |
-| --- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 22  | [elog_messages.py](https://github.com/underautomation/ABB.py/blob/main/examples/elog/elog_messages.py)            | List the event log domains and read their messages with causes and actions |
-
-#### 🔒 Mastership
-
-| #   | Example                                                                                                                     | Description                                                          |
-| --- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| 23  | [mastership_info.py](https://github.com/underautomation/ABB.py/blob/main/examples/mastership/mastership_info.py)            | List the mastership domains, see who holds them, take one and release it |
-
-### Notes on the examples
-
-- An example that only reads is safe on any controller. The ones that write ask before each change and put the original value back.
-- A virtual controller does not implement every resource of a real one. When it answers 404, the example prints the reason and carries on.
-- A controller refuses a write when the mode selector is on manual and the FlexPendant keeps the ownership. The example prints the 403 answer instead of stopping.
-- On an OmniCore controller the certificate is signed by the controller itself. `examples/__init__.py` relaxes the .NET runtime for it before connecting, see `allow_self_signed_certificates()`.
-
----
-
-## 🔁 IRC5 and OmniCore, one API
-
-ABB controllers expose Robot Web Services in two versions. This SDK covers both. The same code runs on
-an old IRC5 and on a new OmniCore. Only the connection parameters change.
-
-| Controller | RobotWare               | Robot Web Services | `RwsVersion` value         |
-| ---------- | ----------------------- | ------------------ | -------------------------- |
-| IRC5       | RobotWare 6 and earlier | RWS 1.0            | `RwsVersion.Irc5_V1_0`     |
-| OmniCore   | RobotWare 7 and later   | RWS 2.0            | `RwsVersion.OmniCore_V2_0` |
+| Controller | RobotWare | Robot Web Services | `RwsVersion` value |
+| --- | --- | --- | --- |
+| IRC5 | RobotWare 6 and earlier | RWS 1.0 | `RwsVersion.Irc5_V1_0` |
+| OmniCore | RobotWare 7 and later | RWS 2.0 | `RwsVersion.OmniCore_V2_0` |
 
 HTTP or HTTPS is a separate setting (`use_https`), independent of the controller generation.
 
----
+## Compatibility
 
-## 🔍 Compatibility
+- **Python:** 3.7 to 3.13, with pythonnet 3.0.5.
+- **Operating systems:** Windows (.NET Framework), Linux and macOS (.NET runtime and `export PYTHONNET_RUNTIME=coreclr`).
+- **Controllers:** IRC5, OmniCore, and their virtual controllers in RobotStudio.
 
-|                       | Supported                                     |
-| --------------------- | --------------------------------------------- |
-| **Robot Controllers** | IRC5, OmniCore, and their virtual controllers |
-| **OS**                | Windows, Linux, macOS                         |
-| **Python**            | 3.7+                                          |
-| **Dependency**        | `pythonnet 3.0.5` (installed automatically)   |
+## License
 
-The controller needs no ABB option. Robot Web Services is part of a standard system.
+This SDK needs a commercial license. A 30-day trial starts at the first use, no key needed. After the
+trial, register your key in your code:
 
----
+```python
+from underautomation.abb.abb_controller import AbbController
 
-## 📢 Contributing
+license_info = AbbController.register_license("Your Company", "your-license-key")
+print(license_info.state)
+```
 
-We welcome your feedback and contributions.
+- License agreement: [underautomation.com/abb/eula](https://underautomation.com/abb/eula) and [License.md](License.md)
+- Trial key: [underautomation.com/license](https://underautomation.com/license?sdk=abb)
+- Prices and quote: [underautomation.com/abb](https://underautomation.com/abb)
 
-- Report issues via [GitHub Issues](https://github.com/underautomation/ABB.py/issues)
-- Submit pull requests with enhancements
-- Suggest features and improvements
+## Support
 
----
-
-## 📜 License
-
-**⚠️ This SDK requires a commercial license.**
-
-- 🆓 **30-day free trial** included out of the box
-- 🔄 **Get a new trial immediately** at [underautomation.com/license](https://underautomation.com/license?sdk=abb)
-- 🛒 **Buy a license** at [underautomation.com/abb](https://underautomation.com/abb)
-- 📄 **EULA**: [underautomation.com/abb/eula](https://underautomation.com/abb/eula)
-
----
-
-## 📬 Need Help?
-
-- 📖 **Documentation**: [underautomation.com/abb/documentation](https://underautomation.com/abb/documentation)
-- 🐍 **Python Get Started Guide**: [underautomation.com/abb/documentation/get-started-python](https://underautomation.com/abb/documentation/get-started-python)
-- 📦 **PyPI Package**: [pypi.org/project/UnderAutomation.ABB](https://pypi.org/project/UnderAutomation.ABB/)
-- 📩 **Contact Us**: [underautomation.com/contact](https://underautomation.com/contact)
+- Documentation: [underautomation.com/abb/documentation](https://underautomation.com/abb/documentation)
+- Issues: [GitHub Issues](https://github.com/underautomation/ABB.py/issues)
+- Contact: [underautomation.com/contact](https://underautomation.com/contact)
