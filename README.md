@@ -43,7 +43,7 @@ No ABB option is required on the controller. Robot Web Services is part of a sta
 
 ## How it works
 
-The package wraps the .NET library `UnderAutomation.Abb.dll` with [pythonnet](https://github.com/pythonnet/pythonnet).
+The package wraps the .NET library `UnderAutomation.ABB.dll` with [pythonnet](https://github.com/pythonnet/pythonnet).
 The DLL is inside the package: `pip install` installs everything, including pythonnet.
 
 - **Windows:** the DLL runs on the .NET Framework 4.x of Windows. Nothing else to install.
