@@ -732,7 +732,7 @@ class RapidService:
 	def get_ui_instruction_parameters(self, stackUrl: str) -> typing.List[RapidUiInstructionParameter]:
 		'''Gets every parameter of a pending UI instruction: what the program passed in, and what it is waiting for (synchronous)
 
-		:param stackUrl: Path identifying the call, as GetActiveUiInstruction reports it
+		:param stackUrl: Path identifying the call, as get_active_ui_instruction() reports it
 		:returns: One entry per parameter
 		'''
 		return [RapidUiInstructionParameter(x) for x in self._instance.GetUiInstructionParameters(stackUrl)]
@@ -740,7 +740,7 @@ class RapidService:
 	def get_ui_instruction_parameter(self, stackUrl: str, parameter: str) -> str:
 		'''Gets the value of one parameter of a pending UI instruction (synchronous)
 
-		:param stackUrl: Path identifying the call, as GetActiveUiInstruction reports it
+		:param stackUrl: Path identifying the call, as get_active_ui_instruction() reports it
 		:param parameter: Name of the parameter, for example "TPCompleted"
 		:returns: Value of the parameter, written the way RAPID writes it
 		'''
@@ -749,7 +749,7 @@ class RapidService:
 	def set_ui_instruction_parameter(self, stackUrl: str, parameter: str, value: str) -> None:
 		'''Answers a pending UI instruction by writing one of its parameters (synchronous) An instruction is normally answered by writing the parameter carrying the answer and then the one marking it as completed.
 
-		:param stackUrl: Path identifying the call, as GetActiveUiInstruction reports it
+		:param stackUrl: Path identifying the call, as get_active_ui_instruction() reports it
 		:param parameter: Name of the parameter to write, for example "TPCompleted"
 		:param value: Value to write, written the way RAPID writes it
 		'''

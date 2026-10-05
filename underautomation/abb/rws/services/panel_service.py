@@ -61,7 +61,7 @@ class PanelService:
 		'''Locks the operating mode selector with a pin code (synchronous)
 
 		:param pin: Four digit pin code, which will be needed again to unlock the selector
-		:param permanent: When true, the selector is locked permanently, which requires the key-less mode selector grant. When false (default), the lock can be released with String).
+		:param permanent: When true, the selector is locked permanently, which requires the key-less mode selector grant. When false (default), the lock can be released with unlock_operation_mode().
 		'''
 		self._instance.LockOperationMode(pin, permanent)
 
@@ -104,7 +104,7 @@ class PanelService:
 	def restart(self, mode: ControllerRestartMode, useImplicitMastership: bool=True) -> None:
 		'''Restarts the controller (synchronous)
 
-		:param mode: How the controller restarts. The control panel accepts Restart, IStart, PStart and BStart; use Boolean) for the others.
+		:param mode: How the controller restarts. The control panel accepts Restart, IStart, PStart and BStart; use restart() for the others.
 		:param useImplicitMastership: A connection established with version 2 requires mastership on all domains to restart the controller. When true (default), mastership is taken implicitly for this request. Ignored on a version 1 connection, which needs none.
 		'''
 		self._instance.Restart(controller_restart_mode(int(mode)), useImplicitMastership)

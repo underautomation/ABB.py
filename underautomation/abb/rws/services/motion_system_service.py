@@ -330,7 +330,7 @@ class MotionSystemService:
 		:param tool: Name of the tool to measure from, null to use the tool active on the unit
 		:param workObject: Name of the work object to measure against, null to use the one active on the unit
 		:param logErrors: True to have the controller write an event log message when the reading fails
-		:returns: Position, orientation and axis configuration of the tool. ExternalAxes is null: this reading does not report them, use String) when they are needed.
+		:returns: Position, orientation and axis configuration of the tool. external_axes is null: this reading does not report them, use get_rob_target() when they are needed.
 		'''
 		return RobTarget(None, None, None, None, None, None, self._instance.GetCartesianPosition(mechanicalUnit, coordinate_system(int(coordinateSystem)), tool, workObject, logErrors))
 

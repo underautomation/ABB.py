@@ -20,27 +20,79 @@ class MastershipService:
 		'''
 		return [MastershipDomain(int(x)) for x in self._instance.GetDomains()]
 
-	def get_info(self, domain: MastershipDomain) -> MastershipInfo:
+	@typing.overload
+	def get_info(self, domain: MastershipDomain) -> MastershipInfo: ...
+
+	@typing.overload
+	def get_info(self) -> typing.List[MastershipInfo]: ...
+
+	def get_info(self, *args, **kwargs) -> MastershipInfo | typing.List[MastershipInfo]:
 		'''Gets who holds the mastership of one domain (synchronous)
+		Gets who holds the mastership of every domain of the controller (synchronous)
 
-		:param domain: Domain to read the state of
-		:returns: State of the domain, with HeldByMe telling whether this connection is allowed to write in it
+		Arguments: (domain)
+		Arguments: ()
+		:param domain: Domain to read the state of.
+		:returns: State of the domain, with held_by_me telling whether this connection is allowed to write in it
 		'''
-		return MastershipInfo(self._instance.GetInfo(mastership_domain(int(domain))))
+		__a = _bind_overload(args, kwargs, ['domain'], {})
+		if __a is not None:
+			domain, = __a
+			return MastershipInfo(self._instance.GetInfo(mastership_domain(int(domain))))
+		__a = _bind_overload(args, kwargs, [], {})
+		if __a is not None:
+			return [MastershipInfo(x) for x in self._instance.GetInfo()]
+		raise TypeError("get_info(): no overload takes these arguments")
 
-	def request(self, domain: MastershipDomain) -> None:
+	@typing.overload
+	def request(self, domain: MastershipDomain) -> None: ...
+
+	@typing.overload
+	def request(self) -> None: ...
+
+	def request(self, *args, **kwargs) -> None:
 		'''Takes the mastership of one domain (synchronous)
+		Takes the mastership of every domain of the controller (synchronous)
 
-		:param domain: Domain to take
+		Arguments: (domain)
+		Arguments: ()
+		:param domain: Domain to take.
 		'''
-		self._instance.Request(mastership_domain(int(domain)))
+		__a = _bind_overload(args, kwargs, ['domain'], {})
+		if __a is not None:
+			domain, = __a
+			self._instance.Request(mastership_domain(int(domain)))
+			return
+		__a = _bind_overload(args, kwargs, [], {})
+		if __a is not None:
+			self._instance.Request()
+			return
+		raise TypeError("request(): no overload takes these arguments")
 
-	def release(self, domain: MastershipDomain) -> None:
+	@typing.overload
+	def release(self, domain: MastershipDomain) -> None: ...
+
+	@typing.overload
+	def release(self) -> None: ...
+
+	def release(self, *args, **kwargs) -> None:
 		'''Gives back the mastership of one domain (synchronous)
+		Gives back the mastership of every domain of the controller (synchronous)
 
-		:param domain: Domain to give back
+		Arguments: (domain)
+		Arguments: ()
+		:param domain: Domain to give back.
 		'''
-		self._instance.Release(mastership_domain(int(domain)))
+		__a = _bind_overload(args, kwargs, ['domain'], {})
+		if __a is not None:
+			domain, = __a
+			self._instance.Release(mastership_domain(int(domain)))
+			return
+		__a = _bind_overload(args, kwargs, [], {})
+		if __a is not None:
+			self._instance.Release()
+			return
+		raise TypeError("release(): no overload takes these arguments")
 
 	def __str__(self):
 		return self._instance.ToString() if self._instance is not None else ""
@@ -55,3 +107,16 @@ class MastershipService:
 
 	def __hash__(self) -> int:
 		return self._instance.GetHashCode() if self._instance is not None else 0
+
+def _bind_overload(args, kwargs, names, defaults):
+	if len(args) > len(names) or any(k not in names[len(args):] for k in kwargs):
+		return None
+	values = list(args)
+	for name in names[len(args):]:
+		if name in kwargs:
+			values.append(kwargs[name])
+		elif name in defaults:
+			values.append(defaults[name])
+		else:
+			return None
+	return values

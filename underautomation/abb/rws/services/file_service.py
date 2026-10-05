@@ -12,9 +12,9 @@ class FileService:
 			self._instance = _internal
 
 	def list_directory(self, path: str) -> DirectoryListing:
-		'''Lists contents of a directory resource (synchronous) Environment variables (e.g. $home, $temp) and devices are treated as directories.When listing the root path ("/", null, or "\\"), the response includes available devices in .The complete content is always returned, however many entries the directory holds.
+		'''Lists contents of a directory resource (synchronous) Environment variables (e.g. $home, $temp) and devices are treated as directories.When listing the root path ("/", null, or "\\\\"), the response includes available devices in .The complete content is always returned, however many entries the directory holds.
 
-		:param path: Path to the directory (e.g. "$home", "$home/mydir", "hd0a:/data"), or null/"/"/"\\" for root
+		:param path: Path to the directory (e.g. "$home", "$home/mydir", "hd0a:/data"), or null/"/"/"\\\\" for root
 		:returns: Directory listing containing files, subdirectories, and devices
 		'''
 		return DirectoryListing(None, self._instance.ListDirectory(path))

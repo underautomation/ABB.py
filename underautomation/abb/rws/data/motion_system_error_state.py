@@ -24,7 +24,7 @@ class MotionSystemErrorState:
 
 	@property
 	def raw_state(self) -> str:
-		'''Error state exactly as the controller reported it, useful when State is Unknown'''
+		'''Error state exactly as the controller reported it, useful when state is Unknown'''
 		return self._instance.RawState
 
 	@raw_state.setter

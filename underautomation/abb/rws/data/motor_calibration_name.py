@@ -31,7 +31,7 @@ class MotorCalibrationName:
 
 	@property
 	def calibration_name(self) -> str:
-		'''Name of the calibration data of the joint, usually the same as JointName'''
+		'''Name of the calibration data of the joint, usually the same as joint_name'''
 		return self._instance.CalibrationName
 
 	@calibration_name.setter

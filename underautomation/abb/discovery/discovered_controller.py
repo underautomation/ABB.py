@@ -14,7 +14,7 @@ class DiscoveredController:
 			self._instance = _internal
 
 	def to_connection_parameters(self) -> ConnectionParameters:
-		'''Build connection parameters pointing at this controller, ready for ConnectionParameters). The address, the port, the scheme and the RWS version come from the discovery. The user name and the password keep their default values, change them if the controller needs other ones.
+		'''Build connection parameters pointing at this controller, ready for connect(). The address, the port, the scheme and the RWS version come from the discovery. The user name and the password keep their default values, change them if the controller needs other ones.
 
 		:returns: Connection parameters for this controller
 		'''
@@ -27,7 +27,7 @@ class DiscoveredController:
 
 	@property
 	def instance_name(self) -> str:
-		'''Full name the controller publishes on the network. It contains SystemName. Null when the controller did not announce itself.'''
+		'''Full name the controller publishes on the network. It contains system_name. Null when the controller did not announce itself.'''
 		return self._instance.InstanceName
 
 	@property
@@ -62,7 +62,7 @@ class DiscoveredController:
 
 	@property
 	def is_version_detected(self) -> bool:
-		'''True when ProbableVersion is more than a guess. It is always true for a controller found by testing the ports of this machine, because the controller was asked. For a controller heard announcing itself, it is false when the announcement did not carry what the version is deduced from, and then holds the most common value rather than a deduction.'''
+		'''True when probable_version is more than a guess. It is always true for a controller found by testing the ports of this machine, because the controller was asked. For a controller heard announcing itself, it is false when the announcement did not carry what the version is deduced from, and then holds the most common value rather than a deduction.'''
 		return self._instance.IsVersionDetected
 
 	@property

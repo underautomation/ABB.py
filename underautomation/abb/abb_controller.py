@@ -6,6 +6,21 @@ from underautomation.abb.discovery.discovered_controller import DiscoveredContro
 from underautomation.abb.license.license_info import LicenseInfo
 from UnderAutomation.ABB import AbbController as abb_controller
 
+class _StaticProperty:
+	'''Property of the class, readable from the class or from an instance'''
+	def __init__(self, fget, fset=None):
+		self._fget = fget
+		self._fset = fset
+		self.__doc__ = fget.__doc__
+
+	def __get__(self, obj, owner=None):
+		return self._fget()
+
+	def __set__(self, obj, value):
+		if self._fset is None:
+			raise AttributeError("read-only property")
+		self._fset(value)
+
 class AbbController:
 	'''Main class of the SDK that represents a connection to an ABB robot controller'''
 	def __init__(self, _internal = 0):
@@ -19,7 +34,7 @@ class AbbController:
 		'''Connect to robot by IP with default connection parameters
 		Initialize a connection to the robot with specified parameters
 
-		:param ip_or_parameters: IP address or hostname of the robot controller — or — Connection parameters
+		:param ip_or_parameters: IP address or hostname of the robot controller. Or: Connection parameters.
 		'''
 		self._instance.Connect(getattr(ip_or_parameters, '_instance', ip_or_parameters))
 
@@ -61,10 +76,13 @@ class AbbController:
 		'''RWS client providing access to Robot Web Services API (controller, panel, IO, RAPID, file system, subscriptions)'''
 		return RwsClientInternal(self._instance.Rws)
 
-	@property
-	def license_info(self) -> LicenseInfo:
+	@staticmethod
+	def _get_license_info() -> LicenseInfo:
 		'''Return information about your license'''
-		return LicenseInfo(None, None, self._instance.LicenseInfo)
+		return LicenseInfo(None, None, abb_controller.LicenseInfo)
+
+	license_info = _StaticProperty(_get_license_info)
+	del _get_license_info
 
 	def __str__(self):
 		return self._instance.ToString() if self._instance is not None else ""

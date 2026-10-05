@@ -32,7 +32,7 @@ class CalibrationInfo:
 
 	@property
 	def joint_count(self) -> int | None:
-		'''Number of entries in Joints, which is fixed and larger than ActiveJointCount. Null when the controller did not report it.'''
+		'''Number of entries in joints, which is fixed and larger than active_joint_count. Null when the controller did not report it.'''
 		return self._instance.JointCount
 
 	@joint_count.setter
@@ -59,7 +59,7 @@ class CalibrationInfo:
 
 	@property
 	def existing_joint_count(self) -> int:
-		'''Number of joints that exist on the unit, counted from Joints'''
+		'''Number of joints that exist on the unit, counted from joints'''
 		return self._instance.ExistingJointCount
 
 	def __str__(self):

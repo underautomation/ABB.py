@@ -25,7 +25,7 @@ class ElogService:
 	def get_domain(self, domain: int) -> ElogDomain:
 		'''Gets the number of messages one event log domain holds and the number it can hold (synchronous)
 
-		:param domain: Number of the domain, as reported by String)
+		:param domain: Number of the domain, as reported by get_domains()
 		:returns: The domain, without its name
 		'''
 		return ElogDomain(self._instance.GetDomain(domain))
@@ -39,7 +39,7 @@ class ElogService:
 	def get_message(self, domain: int, sequenceNumber: int, language: str=None) -> ElogMessage:
 		'''Gets one message of an event log domain (synchronous)
 
-		:param domain: Number of the domain, as reported by String)
+		:param domain: Number of the domain, as reported by get_domains()
 		:param sequenceNumber: Number identifying the message inside its domain
 		:param language: Two letter code of the language the message texts are wanted in, for example "en" or "de". Leave null to read only the code, the severity and the timestamp.
 		:returns: The message
@@ -58,7 +58,7 @@ class ElogService:
 	def clear_messages(self, domain: int) -> None:
 		'''Deletes every message of one event log domain (synchronous)
 
-		:param domain: Number of the domain, as reported by String)
+		:param domain: Number of the domain, as reported by get_domains()
 		'''
 		self._instance.ClearMessages(domain)
 
