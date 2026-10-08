@@ -44,6 +44,7 @@ setuptools.setup(
     include_package_data=True,
     package_data={
         "underautomation": [
+            "py.typed",
             "abb/lib/*.dll",
             "abb/lib/*.txt",
         ],

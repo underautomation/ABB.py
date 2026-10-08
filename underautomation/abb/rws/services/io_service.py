@@ -51,6 +51,12 @@ class IoService:
 		return IoNetworkItem(self._instance.GetNetwork(network))
 
 	def search_networks(self, name: str=None, physicalState: IoNetworkPhysicalState | None=None) -> typing.List[IoNetworkItem]:
+		'''Searches the I/O networks matching a name and/or a physical state (synchronous)
+
+		:param name: Name of the searched networks, for example "Local". Optional when physicalState is given.
+		:param physicalState: Physical state of the searched networks, for example Running. Optional when name is given.
+		:returns: I/O networks matching the criteria
+		'''
 		return [IoNetworkItem(x) for x in self._instance.SearchNetworks(name, physicalState)]
 
 	def get_network_configuration(self, network: str) -> IoNetworkConfiguration:
@@ -95,6 +101,13 @@ class IoService:
 		return IoDeviceItem(self._instance.GetDevice(network, device))
 
 	def search_devices(self, name: str=None, logicalState: IoDeviceLogicalState | None=None, network: str=None) -> typing.List[IoDeviceItem]:
+		'''Searches the I/O devices matching a name and/or a logical state (synchronous)
+
+		:param name: Name of the searched devices, for example "DRV_1". Optional when logicalState is given.
+		:param logicalState: Logical state of the searched devices. Optional when name is given.
+		:param network: Name of the network the searched devices are connected to, for example "DeviceNet". Optional.
+		:returns: I/O devices matching the criteria
+		'''
 		return [IoDeviceItem(x) for x in self._instance.SearchDevices(name, logicalState, network)]
 
 	def get_device_configuration(self, network: str, device: str) -> IoDeviceConfiguration:
@@ -220,9 +233,31 @@ class IoService:
 		self._instance.InvertSignal(network, device, signal, value, logToEventLog)
 
 	def pulse_signal(self, network: str, device: str, signal: str, value: float, pulses: int, activePulseLength: int | None=None, passivePulseLength: int | None=None, logToEventLog: bool=False) -> None:
+		'''Pulses the value of an I/O signal (synchronous) Only digital and group signals can be pulsed.
+
+		:param network: Name of the network the signal belongs to, for example "Local"
+		:param device: Name of the device the signal is connected to, for example "DRV_1"
+		:param signal: Name of the signal, for example "DRV1K1"
+		:param value: Logical value the signal is pulsed to, which the controller requires
+		:param pulses: Number of pulses
+		:param activePulseLength: Length in milliseconds of the active part of a pulse, null to use the controller default
+		:param passivePulseLength: Length in milliseconds of the passive part of a pulse, null to use the controller default
+		:param logToEventLog: Whether the change is written to the event log of the controller
+		'''
 		self._instance.PulseSignal(network, device, signal, value, pulses, activePulseLength, passivePulseLength, logToEventLog)
 
 	def toggle_signal(self, network: str, device: str, signal: str, value: float, pulses: int, activePulseLength: int | None=None, passivePulseLength: int | None=None, logToEventLog: bool=False) -> None:
+		'''Pulses an I/O signal by toggling its current value (synchronous) Only digital and group signals can be toggled.
+
+		:param network: Name of the network the signal belongs to, for example "Local"
+		:param device: Name of the device the signal is connected to, for example "DRV_1"
+		:param signal: Name of the signal, for example "DRV1K1"
+		:param value: Logical value the signal is pulsed to, which the controller requires
+		:param pulses: Number of pulses
+		:param activePulseLength: Length in milliseconds of the active part of a pulse, null to use the controller default
+		:param passivePulseLength: Length in milliseconds of the passive part of a pulse, null to use the controller default
+		:param logToEventLog: Whether the change is written to the event log of the controller
+		'''
 		self._instance.ToggleSignal(network, device, signal, value, pulses, activePulseLength, passivePulseLength, logToEventLog)
 
 	def set_signal_state(self, network: str, device: str, signal: str, simulated: bool) -> None:
@@ -236,9 +271,25 @@ class IoService:
 		self._instance.SetSignalState(network, device, signal, simulated)
 
 	def search_signals(self, criteria: IoSignalSearchCriteria=None, secondCriteria: IoSignalSearchCriteria=None, start: int | None=None, limit: int | None=None) -> typing.List[IoSignalItem]:
+		'''Searches the I/O signals matching the given criteria (synchronous) The returned signals carry their name, type, category, logical value and logical state. Use to also get their physical value, time stamps and write access level.
+
+		:param criteria: Search criteria, null to match every signal
+		:param secondCriteria: Optional second criteria, a signal is returned only when it matches both
+		:param start: Index of the first returned signal, null to start at the first one
+		:param limit: Maximum number of returned signals, null to let the controller decide
+		:returns: I/O signals matching the criteria
+		'''
 		return [IoSignalItem(x) for x in self._instance.SearchSignals(criteria._instance if criteria else None, secondCriteria._instance if secondCriteria else None, start, limit)]
 
 	def search_signals_extended(self, criteria: IoSignalSearchCriteria=None, secondCriteria: IoSignalSearchCriteria=None, start: int | None=None, limit: int | None=None) -> typing.List[IoSignalItem]:
+		'''Searches the I/O signals matching the given criteria and returns their extended properties (synchronous) In addition to , the returned signals carry their physical value, quality, time stamps and write access level.
+
+		:param criteria: Search criteria, null to match every signal
+		:param secondCriteria: Optional second criteria, a signal is returned only when it matches both
+		:param start: Index of the first returned signal, null to start at the first one
+		:param limit: Maximum number of returned signals, null to let the controller decide
+		:returns: I/O signals matching the criteria
+		'''
 		return [IoSignalItem(x) for x in self._instance.SearchSignalsExtended(criteria._instance if criteria else None, secondCriteria._instance if secondCriteria else None, start, limit)]
 
 	def unblock_signals(self) -> None:

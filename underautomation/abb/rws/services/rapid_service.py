@@ -134,6 +134,12 @@ class RapidService:
 		return [RapidTaskSelectionItem(x) for x in self._instance.GetTaskSelection()]
 
 	def get_alias_io(self, start: int | None=None, limit: int | None=None) -> typing.List[RapidAliasIoItem]:
+		'''Gets the I/O signals a running RAPID program has given an alias to (synchronous)
+
+		:param start: Index of the first alias to return, null to start from the beginning
+		:param limit: Maximum number of aliases to return, null to let the controller decide
+		:returns: One entry per alias, empty when no loaded program declares any
+		'''
 		return [RapidAliasIoItem(x) for x in self._instance.GetAliasIo(start, limit)]
 
 	def get_modules(self, task: str) -> typing.List[RapidModuleItem]:
@@ -290,9 +296,31 @@ class RapidService:
 		return RapidRoutineInfo(self._instance.GetRoutine(task, module, row, column))
 
 	def get_routine_arguments(self, task: str, module: str, row: int, column: int, mark: int | None=None, limit: int | None=None) -> typing.List[RapidRoutineArgument]:
+		'''Gets the arguments of the routine call found at a position of a module (synchronous)
+
+		:param task: Name of the task, for example "T_ROB1"
+		:param module: Name of the module, for example "MainModule"
+		:param row: Line of the call, counted from 1
+		:param column: Column of the call, counted from 1
+		:param mark: Index of the first argument to return, null to start from the beginning
+		:param limit: Maximum number of arguments to return, null to let the controller decide
+		:returns: One entry per argument
+		'''
 		return [RapidRoutineArgument(x) for x in self._instance.GetRoutineArguments(task, module, row, column, mark, limit)]
 
 	def get_instruction_template(self, task: str, module: str, name: str, isDataType: bool=False, row: int | None=None, column: int | None=None, parameterNumber: int | None=None, alternativeNumber: int | None=None) -> RapidInstructionTemplate:
+		'''Gets the template the controller suggests for an instruction or a data type: the arguments to write and the values to write them with (synchronous) This is what an editor uses to insert a complete, valid instruction rather than a bare keyword.
+
+		:param task: Name of the task, for example "T_ROB1"
+		:param module: Name of the module the instruction would be inserted into
+		:param name: Name of the instruction or of the data type, for example "MoveJ"
+		:param isDataType: Whether the name is a data type rather than an instruction
+		:param row: Line the instruction would be inserted at, null to leave it to the controller
+		:param column: Column the instruction would be inserted at, null to leave it to the controller
+		:param parameterNumber: Parameter to override the suggestion of, null to take the default
+		:param alternativeNumber: Alternative of that parameter, null to take the default
+		:returns: The suggested template
+		'''
 		return RapidInstructionTemplate(self._instance.GetInstructionTemplate(task, module, name, isDataType, row, column, parameterNumber, alternativeNumber))
 
 	def get_object_children(self, task: str, module: str, startLine: int, startColumn: int, endLine: int, endColumn: int) -> RapidObjectChild:
@@ -434,6 +462,13 @@ class RapidService:
 		self._instance.SetEntryPoint(task, routine)
 
 	def get_breakpoints(self, task: str, start: int | None=None, limit: int | None=None) -> typing.List[RapidBreakpoint]:
+		'''Gets the breakpoints set in the program of a task (synchronous)
+
+		:param task: Name of the task, for example "T_ROB1"
+		:param start: Index of the first breakpoint to return, null to start from the beginning
+		:param limit: Maximum number of breakpoints to return, null to let the controller decide
+		:returns: One entry per breakpoint, empty when the program carries none
+		'''
 		return [RapidBreakpoint(x) for x in self._instance.GetBreakpoints(task, start, limit)]
 
 	def set_breakpoint(self, task: str, module: str, row: int, column: int) -> RapidBreakpoint:
@@ -448,6 +483,13 @@ class RapidService:
 		return RapidBreakpoint(self._instance.SetBreakpoint(task, module, row, column))
 
 	def get_build_errors(self, task: str, start: int | None=None, limit: int | None=None) -> typing.List[RapidBuildError]:
+		'''Gets the errors the controller found while linking the program of a task (synchronous)
+
+		:param task: Name of the task, for example "T_ROB1"
+		:param start: Index of the first error to return, null to start from the beginning
+		:param limit: Maximum number of errors to return, null to let the controller decide
+		:returns: One entry per error, empty when the program linked cleanly
+		'''
 		return [RapidBuildError(x) for x in self._instance.GetBuildErrors(task, start, limit)]
 
 	def get_program_counter_position(self, task: str) -> RapidProgramCounterPosition:
@@ -704,6 +746,13 @@ class RapidService:
 		return RapidActivationRecord(self._instance.GetActivationRecord(task, stackFrame))
 
 	def get_service_routines(self, task: str, start: int | None=None, limit: int | None=None) -> typing.List[RapidServiceRoutineItem]:
+		'''Gets the routines of a task the program pointer can be moved to (synchronous)
+
+		:param task: Name of the task, for example "T_ROB1"
+		:param start: Index of the first routine to return, null to start from the beginning
+		:param limit: Maximum number of routines to return, null to let the controller decide
+		:returns: One entry per routine
+		'''
 		return [RapidServiceRoutineItem(x) for x in self._instance.GetServiceRoutines(task, start, limit)]
 
 	def get_preferred_data_types(self, task: str, instruction: str, parameter: str) -> typing.List[RapidPreferredDataTypeItem]:
@@ -717,9 +766,24 @@ class RapidService:
 		return [RapidPreferredDataTypeItem(x) for x in self._instance.GetPreferredDataTypes(task, instruction, parameter)]
 
 	def get_pallet_heads(self, task: str, start: int | None=None, limit: int | None=None) -> typing.List[RapidPalletHeadItem]:
+		'''Gets the categories of the instruction palette an editor offers (synchronous)
+
+		:param task: Name of the task, for example "T_ROB1"
+		:param start: Index of the first category to return, null to start from the beginning
+		:param limit: Maximum number of categories to return, null to let the controller decide
+		:returns: One entry per category; the number of an entry is what get_pallet() takes
+		'''
 		return [RapidPalletHeadItem(x) for x in self._instance.GetPalletHeads(task, start, limit)]
 
 	def get_pallet(self, task: str, palletNumber: int, start: int | None=None, limit: int | None=None) -> typing.List[RapidPalletItem]:
+		'''Gets the entries of one category of the instruction palette (synchronous)
+
+		:param task: Name of the task, for example "T_ROB1"
+		:param palletNumber: Number of the category, as get_pallet_heads() reports it
+		:param start: Index of the first entry to return, null to start from the beginning
+		:param limit: Maximum number of entries to return, null to let the controller decide
+		:returns: One entry per instruction of the category
+		'''
 		return [RapidPalletItem(x) for x in self._instance.GetPallet(task, palletNumber, start, limit)]
 
 	def get_active_ui_instruction(self) -> RapidUiInstruction:

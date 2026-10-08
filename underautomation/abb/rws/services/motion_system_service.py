@@ -226,6 +226,17 @@ class MotionSystemService:
 		return MechanicalUnitInfo(self._instance.GetMechanicalUnit(mechanicalUnit))
 
 	def set_mechanical_unit(self, mechanicalUnit: str, tool: str=None, workObject: str=None, payload: str=None, totalPayload: str=None, mode: MechanicalUnitMode | None=None, jogMode: JogMode | None=None, coordinateSystem: CoordinateSystem | None=None) -> None:
+		'''Changes one or several properties of a mechanical unit (synchronous) Every argument but the unit name is optional; leave the ones you do not want to touch null. At least one of them has to be given.
+
+		:param mechanicalUnit: Name of the mechanical unit, for example "ROB_1"
+		:param tool: Name of the tool to activate
+		:param workObject: Name of the work object to activate
+		:param payload: Name of the payload to activate
+		:param totalPayload: Name of the total payload to activate
+		:param mode: Whether to activate or deactivate the unit
+		:param jogMode: How the jogging commands sent to the unit are to be interpreted
+		:param coordinateSystem: Reference frame the cartesian positions of the unit are expressed in
+		'''
 		self._instance.SetMechanicalUnit(mechanicalUnit, tool, workObject, payload, totalPayload, mode, jogMode, coordinateSystem)
 
 	def get_axis_count(self, mechanicalUnit: str) -> int:

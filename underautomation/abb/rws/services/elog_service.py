@@ -31,9 +31,25 @@ class ElogService:
 		return ElogDomain(self._instance.GetDomain(domain))
 
 	def get_messages(self, domain: int, order: ElogMessageOrder=ElogMessageOrder.NewestFirst, language: str=None, maxCount: int | None=None) -> typing.List[ElogMessage]:
+		'''Gets the messages held by one event log domain (synchronous)
+
+		:param domain: Number of the domain, as reported by get_domains()
+		:param order: Order the messages are returned in, most recent first by default
+		:param language: Two letter code of the language the message texts are wanted in, for example "en" or "de". Leave null to read only the code, the severity and the timestamp of each message.
+		:param maxCount: Largest number of messages to return, null to return every message of the domain
+		:returns: Messages of the domain, empty when the domain holds none
+		'''
 		return [ElogMessage(x) for x in self._instance.GetMessages(domain, elog_message_order(int(order)), language, maxCount)]
 
 	def get_message_titles(self, domain: int, language: str, order: ElogMessageOrder=ElogMessageOrder.NewestFirst, maxCount: int | None=None) -> typing.List[ElogMessage]:
+		'''Gets the messages held by one event log domain, with their short text only (synchronous)
+
+		:param domain: Number of the domain, as reported by get_domains()
+		:param language: Two letter code of the language the titles are wanted in, for example "en" or "de". Required.
+		:param order: Order the messages are returned in, most recent first by default
+		:param maxCount: Largest number of messages to return, null to return every message of the domain
+		:returns: Messages of the domain, carrying their severity, code, timestamp and title only
+		'''
 		return [ElogMessage(x) for x in self._instance.GetMessageTitles(domain, language, elog_message_order(int(order)), maxCount)]
 
 	def get_message(self, domain: int, sequenceNumber: int, language: str=None) -> ElogMessage:
